@@ -34,8 +34,9 @@ Restart Claude Desktop. The skill becomes active.
 | Skill | What it does | Trigger phrases |
 |---|---|---|
 | [`plan-lesson`](skills/plan-lesson/) | Plan a Canvas lesson page using the school's lesson template. Generates content for all required slots; teacher reviews; published as a draft Canvas page. | "plan a lesson", "create a lesson", "draft a lesson page" |
+| [`plan-assessment`](skills/plan-assessment/) | Plan a Canvas assessment page (test, quiz, project, presentation, essay, lab, portfolio) using the school's assessment template. Generates per-slot content including the grade boundaries table and AI-use policy appropriate to the assessment type. | "plan an assessment", "create a test/quiz/project page", "draft an assessment" |
 
-More skills coming — `plan-assessment`, `plan-module`, `plan-course`, `publish-to-canvas` are on the roadmap.
+More skills coming — `plan-module`, `plan-course`, `publish-to-canvas` are on the roadmap.
 
 ## For other schools
 
