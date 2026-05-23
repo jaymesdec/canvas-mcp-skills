@@ -36,10 +36,10 @@ Restart Claude Desktop. The skill becomes active.
 | [`plan-lesson`](skills/plan-lesson/) | Plan a Canvas lesson page using the school's lesson template. Generates content for all required slots; teacher reviews; published as a draft Canvas page. | "plan a lesson", "create a lesson", "draft a lesson page" |
 | [`plan-assessment`](skills/plan-assessment/) | Plan a Canvas assessment page (test, quiz, project, presentation, essay, lab, portfolio) using the school's assessment template. Generates per-slot content including the grade boundaries table and AI-use policy appropriate to the assessment type. | "plan an assessment", "create a test/quiz/project page", "draft an assessment" |
 | [`plan-module`](skills/plan-module/) | Plan an entire Canvas module: outcomes page, a sequence of lesson pages, a summative assessment, and the Canvas Module itself with all items added in order. Enforces the school's module naming convention. Requires canvas-mcp v0.3.12+. | "plan a module", "design a module", "draft a unit" |
+| [`plan-course`](skills/plan-course/) | Plan an entire Canvas course's structure: a sequence of modules across the academic calendar, each module's Outcomes page drafted, with optional foundational pages (Start Here, More Resources). Defers lesson + assessment drafting to follow-up `plan-module` runs. Requires canvas-mcp v0.3.12+. | "plan a course", "scaffold a course", "set up the course structure", "outline a year of curriculum" |
 
 ### Roadmap
 
-- `plan-course` — high-level course design, generates a module sequence from a syllabus.
 - `create-rubric` — generate a Canvas rubric from criteria + competency framework, associate with one or more assignments.
 - `create-quiz` — generate a Canvas Quiz (the actual graded object, not just a Page describing it) with questions, point values, and time limits.
 
