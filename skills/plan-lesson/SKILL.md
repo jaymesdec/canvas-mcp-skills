@@ -5,7 +5,9 @@ description: Plan a Canvas lesson page using the school's lesson template. Use w
 
 # Plan Lesson
 
-Plan a single class lesson and publish it as a draft Canvas page using the school's lesson template. Generic across schools: the slot list, section defaults, and competency framework all come from the canvas-mcp's school config — this skill doesn't hardcode any of that.
+Plan a single class lesson and create it as a **draft** Canvas page using the school's lesson template. Generic across schools: the slot list, section defaults, and competency framework all come from the canvas-mcp's school config — this skill doesn't hardcode any of that.
+
+> **This skill never publishes pages.** Every page lands in Canvas as a draft (`published: false`). The teacher reviews the draft in Canvas and clicks **Publish** themselves when ready. This is a hard policy — don't try to flip the published flag, and don't describe what the skill does as "publishing."
 
 ## When to use
 
@@ -37,7 +39,7 @@ Before generating any content, confirm with the teacher:
 - **What's the lesson title?** If they gave a topic ("the water cycle"), propose a working title ("The Water Cycle") and let them adjust.
 - **Anything else they specifically want included?** A guest speaker, a particular reading, a discussion prompt — note these so they land in the right slot.
 
-Don't ask about things you can figure out yourself or that don't matter at planning time. Specifically: don't ask about module placement yet (we'll handle it after the page is drafted), don't ask about publishing (the MCP forces `published: false` and the teacher publishes manually), don't ask about HTML structure (the template handles it).
+Don't ask about things you can figure out yourself or that don't matter at planning time. Specifically: don't ask about module placement yet (we'll handle it after the draft is created), don't ask about publishing — the MCP creates the page as a draft and the teacher publishes manually — don't ask about HTML structure (the template handles it).
 
 ### 2. Discover the lesson template
 
@@ -74,7 +76,7 @@ Sections marked `default: "include"` (typically `assessment`) stay on unless the
 
 Don't ask the teacher about optional sections by name — let their words drive the choice. If they mentioned "tomorrow we'll debate the impact of dams" → discussion section on. If they said "this is purely an intro lesson, no graded work" → assessment section off.
 
-### 6. Preview before publishing
+### 6. Preview before creating the draft
 
 Show the teacher a brief outline of what each slot will contain:
 
@@ -89,12 +91,12 @@ Lesson page draft — "The Water Cycle"
 • Discussion: (omitted — not requested)
 • Assessment: Friday quiz link (placeholder)
 
-Ready to publish as a draft Canvas page?
+Ready to create this as a draft in Canvas?
 ```
 
 Wait for approval or revision requests. If the teacher asks for changes, iterate on the affected slots without regenerating everything.
 
-### 7. Publish
+### 7. Create the draft in Canvas
 
 Call `create_page` with:
 
@@ -109,11 +111,13 @@ create_page(
 )
 ```
 
-The page is created as a draft (`published: false`). Confirm to the teacher:
+The page is created as a draft (`published: false` — enforced by the MCP). Confirm to the teacher:
 
-> Created draft lesson page **The Water Cycle** in DSGN 9. It's unpublished — review at <Canvas link> and publish when you're ready.
+> Created draft lesson page **The Water Cycle** in DSGN 9. It's saved as a draft — open it in Canvas at <Canvas link>, review, and click **Publish** when you're ready.
 
 If `create_page` returns `template_applied: null`, surface that — it means the school config didn't load and no template was applied.
+
+**Never tell the teacher you "published" the page.** It's a draft until they publish it manually in Canvas.
 
 ### 8. Module placement (only if asked)
 
@@ -142,5 +146,5 @@ You must provide **all slots** in the rebuild, not just the changed ones — the
 - **Don't use `create_page` to update an existing lesson** — it creates a duplicate with a `-2` slug.
 - **Don't fill slots with template-like prose** ("Here, students will learn about X") — the template provides the chrome; slots get the actual content.
 - **Don't hardcode Franklin competencies / structure** in your output. Use `list_competencies` / `list_page_templates` to discover what the school provides. Other schools using this skill should get equally relevant output.
-- **Don't auto-publish.** The MCP forces `published: false`; don't try to flip it. Teachers publish after review.
+- **Never publish.** The MCP forces `published: false`; don't try to flip it, don't suggest you have, and don't tell the teacher you "published" anything. Teachers publish manually in Canvas after reviewing the draft.
 - **Don't make up Canvas URLs.** If you reference a "syllabus" or "module 3," use the actual Canvas URLs from `list_modules` / `get_course_details` — not constructed paths.

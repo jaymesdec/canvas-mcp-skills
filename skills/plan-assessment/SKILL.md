@@ -5,7 +5,9 @@ description: Plan a Canvas assessment page (test, quiz, project, presentation, e
 
 # Plan Assessment
 
-Plan a graded task (test, quiz, project, presentation, essay) and publish a Canvas page describing it. Covers all 6 required slots of the school's assessment template. Generic across schools.
+Plan a graded task (test, quiz, project, presentation, essay) and create a Canvas **draft** page describing it. Covers all 6 required slots of the school's assessment template. Generic across schools.
+
+> **This skill never publishes pages.** Every page lands in Canvas as a draft (`published: false`). The teacher reviews the draft in Canvas and clicks **Publish** themselves when ready. This is a hard policy — don't try to flip the published flag, and don't describe what the skill does as "publishing."
 
 ## When to use
 
@@ -44,8 +46,8 @@ Before generating any content, you need these answers. Some come from the teache
 
 What you don't need to ask:
 
-- Module placement — handle that after the page is drafted if the teacher mentioned a module.
-- Publishing — the MCP forces `published: false`; teachers publish manually.
+- Module placement — handle that after the draft is created if the teacher mentioned a module.
+- Publishing — the MCP creates the page as a draft; teachers publish manually in Canvas.
 - HTML structure — the template handles it.
 - "Should I include a rubric?" — if the assessment uses one, the teacher will mention it; if they don't mention one, just generate the grade boundaries table.
 
@@ -282,7 +284,7 @@ If the school config has a competency framework AND the teacher mentioned which 
 
 Don't shoehorn competencies in if the teacher didn't bring them up. And if no competency framework is configured, skip this entirely.
 
-### 6. Preview before publishing
+### 6. Preview before creating the draft
 
 Show the teacher an outline of what each slot will contain:
 
@@ -297,12 +299,12 @@ Type: in-class MC test • 20 points • 15% of trimester • 45 minutes
 • Time: 45 min standard, 60 min extended
 • AI Use: Default policy for closed-book test (no AI tools allowed)
 
-Ready to publish as a draft Canvas page?
+Ready to create this as a draft in Canvas?
 ```
 
 Wait for approval or revision requests. If the teacher asks for changes, iterate on the affected slots — don't regenerate everything.
 
-### 7. Publish
+### 7. Create the draft in Canvas
 
 ```
 create_page(
@@ -320,9 +322,11 @@ create_page(
 )
 ```
 
-Confirm to the teacher with the page URL:
+The page is created as a draft (`published: false` — enforced by the MCP). Confirm to the teacher with the page URL:
 
-> Created draft assessment page **Watershed Unit Test** in DSGN 9. It's unpublished — review at <Canvas link> and publish when you're ready.
+> Created draft assessment page **Watershed Unit Test** in DSGN 9. It's saved as a draft — open it in Canvas at <Canvas link>, review, and click **Publish** when you're ready.
+
+**Never tell the teacher you "published" the page.** It's a draft until they publish it manually in Canvas.
 
 ### 8. Module placement (only if asked)
 
@@ -369,4 +373,4 @@ Same caveat: you must provide all the lesson's slots in the rebuild.
 - **Don't use a generic AI policy.** Match it to the assessment type. A take-home essay has very different AI rules than a closed-book test.
 - **Don't pad pre-work with generic items.** If you don't know what the unit covered, ask. "Review your notes" is not pre-work.
 - **Don't make up Canvas URLs.** When linking lessons / assignments / rubrics, use the actual URLs from `list_pages` / `list_assignments` / `list_modules` — not constructed paths.
-- **Don't auto-publish.** The MCP forces `published: false`; don't try to flip it.
+- **Never publish.** The MCP forces `published: false`; don't try to flip it, don't suggest you have, and don't tell the teacher you "published" anything. Teachers publish manually in Canvas after reviewing the draft.

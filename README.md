@@ -36,7 +36,18 @@ Restart Claude Desktop. The skill becomes active.
 | [`plan-lesson`](skills/plan-lesson/) | Plan a Canvas lesson page using the school's lesson template. Generates content for all required slots; teacher reviews; published as a draft Canvas page. | "plan a lesson", "create a lesson", "draft a lesson page" |
 | [`plan-assessment`](skills/plan-assessment/) | Plan a Canvas assessment page (test, quiz, project, presentation, essay, lab, portfolio) using the school's assessment template. Generates per-slot content including the grade boundaries table and AI-use policy appropriate to the assessment type. | "plan an assessment", "create a test/quiz/project page", "draft an assessment" |
 
-More skills coming — `plan-module`, `plan-course`, `publish-to-canvas` are on the roadmap.
+### Roadmap
+
+- `plan-module` — sequence multiple lessons + assessments under a Canvas module, with weekly numbering if the school config has one.
+- `plan-course` — high-level course design, generates a module sequence from a syllabus.
+- `create-rubric` — generate a Canvas rubric from criteria + competency framework, associate with one or more assignments.
+- `create-quiz` — generate a Canvas Quiz (the actual graded object, not just a Page describing it) with questions, point values, and time limits.
+
+### Skill design principles
+
+- **Never publish.** Every page / quiz / assignment created by these skills lands in Canvas as a **draft**. The teacher reviews and clicks Publish themselves. The MCP server enforces this at the tool layer (`published: false` is forced on create), and the skills reinforce it in their workflow language. Skills should never describe their output as "published" — only ever as drafts.
+- **Generic by default.** Skills discover school-specific structure via `list_page_templates`, `list_competencies`, and the loaded school config. No hardcoded Franklin terminology.
+- **Don't over-ask.** Skills should figure out what they can from the teacher's initial request and only ask about things they genuinely need (course confirmation, total points, AI policy, etc.). Module placement, publish flags, and HTML structure should never need a question.
 
 ## For other schools
 
