@@ -50,11 +50,17 @@ Call `list_page_templates` and find the entry named `lesson`. Read its:
 
 If no `lesson` template exists in the school config, fall back: tell the teacher "no lesson template configured — I'll create a generic page instead" and use `template: "default"` or `template: "none"`. Continue the workflow as best you can.
 
-### 3. (Optional) Look up competencies
+### 3. Consider competency alignment
 
-If the school config has a competency framework, call `list_competencies` and offer to align the lesson to one or more competencies. Mention them naturally in the lesson — don't shoehorn — and surface them in the `tasks` or `to` slot where appropriate.
+Call `list_competencies`. If a framework is configured (e.g., Franklin's TD Competencies, or another school's framework), **always** spend a moment thinking about which 1–3 competencies this lesson naturally targets. Don't skip this just because the teacher didn't bring it up — most lessons have a clear competency frame, and surfacing it makes the page genuinely more useful.
 
-If no competency framework is configured, skip this step entirely.
+This is a *thinking* step, not a content step (yet). You're using the competency frame to inform what goes into each slot — especially `to` (the skills slot) and `tasks` (the activity slot). A watershed lesson naturally targets **Knowledge-Based Reasoning** (applying geography concepts) and **Systems Thinking** (understanding the interconnected water cycle). Knowing this, you'd phrase the `to` slot's skills with that lens, and design `tasks` that actually exercise those competencies rather than something tangential.
+
+Pick 1–3 competencies, not all 9. The alignment is meaningful only if the lesson genuinely targets them. Don't shoehorn.
+
+In step 6 (preview), you'll surface the suggested alignment to the teacher and ask whether to call it out explicitly in the lesson. Most teachers want the alignment visible to students; some prefer keeping it woven into the content without explicit labels.
+
+If `list_competencies` returns `configured: false` (no framework set), skip this step entirely.
 
 ### 4. Generate content for each slot
 
@@ -78,7 +84,7 @@ Don't ask the teacher about optional sections by name — let their words drive 
 
 ### 6. Preview before creating the draft
 
-Show the teacher a brief outline of what each slot will contain:
+Show the teacher a brief outline of what each slot will contain, plus the suggested competency alignment if you identified one in step 3:
 
 ```
 Lesson page draft — "The Water Cycle"
@@ -91,10 +97,17 @@ Lesson page draft — "The Water Cycle"
 • Discussion: (omitted — not requested)
 • Assessment: Friday quiz link (placeholder)
 
+Suggested competency focus: Knowledge-Based Reasoning + Systems Thinking.
+Want me to call these out explicitly in the lesson, or keep them woven into the content?
+
 Ready to create this as a draft in Canvas?
 ```
 
 Wait for approval or revision requests. If the teacher asks for changes, iterate on the affected slots without regenerating everything.
+
+If the teacher wants competencies called out explicitly, add a short paragraph at the end of the `to` slot referencing them by name (e.g., `<p>This lesson exercises <strong>Knowledge-Based Reasoning</strong> and <strong>Systems Thinking</strong> through the watershed mapping task.</p>`). If they want them kept implicit, the slot content stays as you generated it — the competency lens already shaped it.
+
+If no competency framework was configured (step 3 was skipped), omit the "Suggested competency focus" line from the preview.
 
 ### 7. Create the draft in Canvas
 

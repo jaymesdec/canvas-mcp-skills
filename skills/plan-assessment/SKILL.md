@@ -274,19 +274,21 @@ Frankly, for small totals (<25 points), give the teacher the table but flag that
 
 If the teacher wants a different scale ("we use 90/80/70/60 for A/B/C/D"), use that. Don't over-engineer — the table is a quick reference, not a contract.
 
-### 5. (Optional) Mention competency alignment
+### 5. Consider competency alignment
 
-If the school config has a competency framework AND the teacher mentioned which competency this assessment targets (e.g., "this is a Knowledge-Based Reasoning assessment"), call `list_competencies`, find the matching one, and reference it in the `description` slot:
+Call `list_competencies`. If a framework is configured (Franklin's TD Competencies, or another school's framework), **always** spend a moment identifying which 1–3 competencies this assessment naturally evaluates. Assessments almost always target specific competencies — even a closed-book MC test exercises Knowledge-Based Reasoning; a project usually targets two or three.
 
-```html
-<p>This assessment evaluates the <strong>Knowledge-Based Reasoning</strong> competency through:</p>
-```
+This is a *thinking* step that informs your slot content (especially `description` and `structure_and_grading`). A watershed test that asks students to identify components of a watershed and trace water movement is exercising Knowledge-Based Reasoning (recall + application) and Systems Thinking (interconnections). Knowing this, you'd phrase the `description` slot's "students will" list with verbs that match those competencies and design grade boundaries that reflect mastery of those skills.
 
-Don't shoehorn competencies in if the teacher didn't bring them up. And if no competency framework is configured, skip this entirely.
+Pick 1–3 competencies, not all of them. Don't shoehorn — only call out competencies the assessment genuinely measures.
+
+In step 6 (preview), you'll surface the suggested alignment to the teacher and ask whether to call them out explicitly in the `description` slot. If the teacher already told you upfront which competency they're targeting ("this is a Knowledge-Based Reasoning assessment"), treat that as authoritative — don't override their choice, just confirm it during the preview.
+
+If `list_competencies` returns `configured: false`, skip this step entirely.
 
 ### 6. Preview before creating the draft
 
-Show the teacher an outline of what each slot will contain:
+Show the teacher an outline of what each slot will contain, plus the suggested competency alignment if you identified one in step 5:
 
 ```
 Assessment page draft — "Watershed Unit Test"
@@ -299,10 +301,17 @@ Type: in-class MC test • 20 points • 15% of trimester • 45 minutes
 • Time: 45 min standard, 60 min extended
 • AI Use: Default policy for closed-book test (no AI tools allowed)
 
+Suggested competencies this assessment evaluates: Knowledge-Based Reasoning + Systems Thinking.
+Want me to call these out explicitly in the description, or keep them implicit?
+
 Ready to create this as a draft in Canvas?
 ```
 
 Wait for approval or revision requests. If the teacher asks for changes, iterate on the affected slots — don't regenerate everything.
+
+If the teacher wants competencies called out explicitly, add a paragraph to the `description` slot referencing them (e.g., `<p>This assessment evaluates <strong>Knowledge-Based Reasoning</strong> (recall + application) and <strong>Systems Thinking</strong> (the watershed cycle questions).</p>`). If they want them implicit, the description stays as you generated it — the competency lens already shaped it.
+
+If no competency framework was configured (step 5 was skipped), omit the "Suggested competencies" line from the preview.
 
 ### 7. Create the draft in Canvas
 
