@@ -38,11 +38,11 @@ Restart Claude Desktop. The skill becomes active.
 | [`plan-module`](skills/plan-module/) | Plan an entire Canvas module: outcomes page, a sequence of lesson pages, a summative assessment, and the Canvas Module itself with all items added in order. Enforces the school's module naming convention. Requires canvas-mcp v0.3.12+. | "plan a module", "design a module", "draft a unit" |
 | [`plan-course`](skills/plan-course/) | Plan an entire Canvas course's structure: a sequence of modules across the academic calendar, each module's Outcomes page drafted, with optional foundational pages (Start Here, More Resources). Defers lesson + assessment drafting to follow-up `plan-module` runs. Requires canvas-mcp v0.3.12+. | "plan a course", "scaffold a course", "set up the course structure", "outline a year of curriculum" |
 | [`grade-submissions`](skills/grade-submissions/) | Grade every submission for a Canvas assignment. Drafts scores + feedback, presents a review table, dry-runs before writing. Handles text entries, Google Docs/Slides (via Claude Drive MCP), file uploads (notebooks, PDFs, code, images). Rubric-aware. | "grade submissions", "grade this assignment", "score student work" |
+| [`create-quiz`](skills/create-quiz/) | Build a Canvas Quiz (the actual graded object with questions) from a Canvas page, PDF, Google Doc, or pasted text. Generates AI-drafted questions with mandatory source-quote citations OR extracts existing ones from a pre-written quiz doc. Teacher reviews and edits before the quiz is created. Composes with `plan-assessment` for quiz-style assessments. Classic Quizzes only. | "create a quiz", "make a quiz", "build a Canvas quiz", "convert this quiz to Canvas" |
 
 ### Roadmap
 
 - `create-rubric` — generate a Canvas rubric from criteria + competency framework, associate with one or more assignments.
-- `create-quiz` — generate a Canvas Quiz (the actual graded object, not just a Page describing it) with questions, point values, and time limits.
 
 ### Skill design principles
 
