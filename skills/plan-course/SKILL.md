@@ -1,6 +1,6 @@
 ---
 name: plan-course
-description: Plan an entire Canvas course's structure — a sequence of modules across the academic calendar, with each module's Outcomes page drafted, plus optional foundational pages (Start Here, More Resources). Use when the teacher says "plan a course", "design a course", "set up the course structure", "scaffold a course", "outline a year of curriculum", or is starting work on a fresh Canvas course shell that needs its skeleton built out. Creates Canvas Modules + Module Outcomes pages; defers lesson + assessment drafting to follow-up plan-module / plan-lesson / plan-assessment runs.
+description: Plan an entire Canvas course's structure — a sequence of modules across the academic calendar, with each module's Outcomes page drafted, plus optional foundational pages (Start Here, More Resources). Use when the teacher says "plan a course", "design a course", "set up the course structure", "scaffold a course", "outline a year of curriculum", or is starting work on a fresh Canvas course shell that needs its skeleton built out. Creates Canvas Modules + Module Outcomes pages; defers lesson + assessment drafting to follow-up plan-module / plan-lesson / post-lesson-page / plan-assessment runs.
 ---
 
 # Plan Course
@@ -22,7 +22,7 @@ A teacher is setting up a fresh Canvas course or restructuring an existing one a
 
 - **Single module** — that's `plan-module`. plan-course creates a SEQUENCE of modules; if you only need one, use plan-module directly.
 - **Adding a module to an existing course's existing structure** — also `plan-module`.
-- **Lessons or assessments within an already-scaffolded course** — `plan-lesson` / `plan-assessment`.
+- **Lessons or assessments within an already-scaffolded course** — `plan-lesson` (UbD) / `post-lesson-page` / `plan-assessment`.
 - **Creating the actual Canvas course itself** — courses are usually provisioned by your school's Canvas account admin / SIS sync. This skill assumes the course shell already exists.
 
 ## Prerequisites

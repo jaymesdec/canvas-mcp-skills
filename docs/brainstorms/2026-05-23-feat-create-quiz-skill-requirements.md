@@ -7,6 +7,8 @@ date: 2026-05-23
 
 # create-quiz skill — requirements
 
+> **Naming update (post-publication):** The skill has been renamed to **`post-quiz`** under the `post-*` convention for operational artifact creation. References below to `create-quiz` describe the same skill — read them as `post-quiz`. Similarly, what this doc calls `plan-lesson` is now the **`post-lesson-page`** skill; a separate UbD-based **`plan-lesson`** skill now exists for pedagogical planning *before* posting. The MCP tool names (`create_quiz`, `create_quiz_question`, `create_page`) are unchanged — only skill names shifted.
+
 > **Revision note (2026-05-23):** This document was revised after a multi-persona document review surfaced 11 substantive design concerns. The biggest shifts: verification reframed as source-quote anchoring (not LLM self-check); auto-detection of generation-vs-conversion replaced with explicit teacher confirmation; plan-assessment ↔ create-quiz linkage enforced (not aspirational); success criteria changed from unfalsifiable correctness rates to observable process metrics; essay_question deferred from v1; spec-preview step collapsed into the draft-review step.
 
 ## Problem

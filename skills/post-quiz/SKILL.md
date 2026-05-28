@@ -1,9 +1,9 @@
 ---
-name: create-quiz
-description: Build a Canvas Quiz (the actual graded object with questions) from source content the teacher provides — a Canvas lesson page, a PDF reading, a Google Doc, or plain text. Use when the teacher says "create a quiz", "make a quiz", "build a Canvas quiz", "generate quiz questions", "convert this quiz to Canvas", or drops in a document and wants quiz questions from it. Drafts AI-generated questions OR extracts existing ones from a pre-written quiz doc; teacher reviews with source citations, edits, and the skill creates the Canvas Quiz as a draft. Composes with plan-assessment for quiz-style assessments.
+name: post-quiz
+description: Build and post a Canvas Quiz (the actual graded object with questions) as a draft from source content the teacher provides — a Canvas lesson page, a PDF reading, a Google Doc, or plain text. Use when the teacher says "post a quiz", "create a quiz", "make a quiz", "build a Canvas quiz", "generate quiz questions", "convert this quiz to Canvas", or drops in a document and wants quiz questions from it. Drafts AI-generated questions OR extracts existing ones from a pre-written quiz doc; teacher reviews with source citations, edits, and the skill creates the Canvas Quiz as a draft. Composes with plan-assessment for quiz-style assessments.
 ---
 
-# Create Quiz
+# Post Quiz
 
 Draft and create a Canvas Quiz with AI-generated (or extracted) questions, anchored to source citations the teacher can verify in seconds. Always a draft. Teacher publishes manually.
 
@@ -22,7 +22,7 @@ A teacher wants a Canvas Quiz built from something they have. Common phrasings:
 
 ## When NOT to use
 
-- **Just a Canvas Page describing an assessment** (no actual quiz questions inside) — that's `plan-assessment`. Some assessments need BOTH a description page (plan-assessment) AND a graded quiz object (create-quiz) — they compose, see "Linkage with plan-assessment" below.
+- **Just a Canvas Page describing an assessment** (no actual quiz questions inside) — that's `plan-assessment`. Some assessments need BOTH a description page (plan-assessment) AND a graded quiz object (post-quiz) — they compose, see "Linkage with plan-assessment" below.
 - **Updating an existing Canvas Quiz** — the MCP's tools currently only create quizzes; modifying existing ones (changing questions, adding/removing) is out of scope. The teacher edits existing quizzes directly in Canvas.
 - **New Quizzes** — this skill targets Canvas's **Classic Quizzes** API. If your school has fully migrated to New Quizzes, this skill won't work; see step 1's precondition check.
 
@@ -265,15 +265,15 @@ When the teacher confirmed conversion mode, the workflow changes in these ways:
 
 ## Linkage with plan-assessment
 
-When the teacher's broader workflow involves a **quiz-style assessment**, two artifacts are typically needed: a Canvas Page describing the assessment (`plan-assessment`) AND the actual Canvas Quiz object with questions (`create-quiz`). The two skills compose, with **enforced linkage**:
+When the teacher's broader workflow involves a **quiz-style assessment**, two artifacts are typically needed: a Canvas Page describing the assessment (`plan-assessment`) AND the actual Canvas Quiz object with questions (`post-quiz`). The two skills compose, with **enforced linkage**:
 
 ### When `plan-assessment` finishes and the assessment type was "test" or "quiz"
 
 `plan-assessment` offers the handoff explicitly:
 
-> Want me to create the actual Canvas Quiz for this assessment now? I'll use the spec you just confirmed (20 MC questions, 1 point each, 45 minutes, no AI tools allowed). Just say "yes" or run `/create-quiz` and I'll inherit those values.
+> Want me to create the actual Canvas Quiz for this assessment now? I'll use the spec you just confirmed (20 MC questions, 1 point each, 45 minutes, no AI tools allowed). Just say "yes" or run `/post-quiz` and I'll inherit those values.
 
-### When `create-quiz` runs in a course with a matching plan-assessment page
+### When `post-quiz` runs in a course with a matching plan-assessment page
 
 At step 1, before asking the teacher for spec details, call `list_pages(course_identifier)` and look for a page whose title matches the proposed quiz title (or is provided as context). If you find a match, call `get_page_content(course_identifier, page_url)` and **read the spec from the page** — title, point total, type mix (from the description slot), time limit, weighting, AI-use policy. Tell the teacher:
 

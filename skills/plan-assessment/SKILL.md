@@ -23,7 +23,7 @@ The same template is used whether it's an in-class test or a long-term project �
 ## When NOT to use
 
 - **Just a Canvas Assignment object** (with submission upload, due date, etc.) — that's not a Page. This skill creates the *describing page*, not the Canvas Assignment itself.
-- **Single lessons** — that's `plan-lesson`.
+- **Single lessons** — that's `plan-lesson` (UbD planning) or `post-lesson-page` (posting an already-planned lesson).
 - **Editing an existing assessment** — see "Updating an existing assessment" below.
 
 ## Prerequisites
@@ -339,7 +339,7 @@ The page is created as a draft (`published: false` — enforced by the MCP). Con
 
 ### 8. Module placement (only if asked)
 
-Same as `plan-lesson`: if the teacher said "add it after the watershed lesson," call `list_modules(course_identifier, include_items: true)`, find the right module + position, then `add_module_item(type: "Page", content_id: "<the-page-slug>", position: <n>)`.
+Same as `post-lesson-page`: if the teacher said "add it after the watershed lesson," call `list_modules(course_identifier, include_items: true)`, find the right module + position, then `add_module_item(type: "Page", content_id: "<the-page-slug>", position: <n>)`.
 
 ## Updating an existing assessment
 

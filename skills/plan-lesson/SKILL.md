@@ -1,171 +1,237 @@
 ---
 name: plan-lesson
-description: Plan a Canvas lesson page using the school's lesson template. Use when the teacher says "plan a lesson", "create a lesson page", "draft a lesson", or describes a single class session that needs a Canvas page. Generates content for every slot the school's lesson template defines (objectives, key concepts, resources, tasks, etc.), reviews with the teacher, then publishes as a draft Canvas page. Generic — works with whatever lesson template the school config provides.
+description: Plan a single class lesson using Understanding by Design (UbD) — backwards design from learning targets → evidence of understanding → learning activities. Use when the teacher says "plan a lesson", "design a lesson", "help me think through tomorrow's class", "what should I teach for X", or wants pedagogical scaffolding before deciding what students will do. Produces a conversational UbD brief (Stages 1–3 scaled for one class session) and offers handoff to `post-lesson-page` when ready to materialize on Canvas. Does NOT create any Canvas artifacts itself.
 ---
 
 # Plan Lesson
 
-Plan a single class lesson and create it as a **draft** Canvas page using the school's lesson template. Generic across schools: the slot list, section defaults, and competency framework all come from the canvas-mcp's school config — this skill doesn't hardcode any of that.
+Think a single class session through using **Understanding by Design (UbD)** — start with what students should understand, design how you'll know they got there, then build the activities that get them there. Lesson-scaled: 1–2 learning targets, one formative check, one class arc. Produces a UbD brief in chat; offers handoff to `post-lesson-page` when the teacher's ready to materialize it on Canvas.
 
-> **This skill never publishes pages.** Every page lands in Canvas as a draft (`published: false`). The teacher reviews the draft in Canvas and clicks **Publish** themselves when ready. This is a hard policy — don't try to flip the published flag, and don't describe what the skill does as "publishing."
+> **This skill writes nothing to Canvas.** It's a pedagogical thinking partner. Posting is a separate skill (`post-lesson-page`) the teacher can run once the brief is locked.
 
 ## When to use
 
-A teacher describes a single class session they want to teach. Common phrasings:
+A teacher is figuring out what to teach for a single class session and wants a framework. Common phrasings:
 
-- "Plan a lesson on the water cycle for DSGN 9"
-- "Create a Canvas page for tomorrow's class about prototyping"
-- "Draft a lesson — Week 3 of FSV 117, intro to user testing"
-- "I need a lesson page on parallel circuits"
+* "Plan a lesson on the water cycle for DSGN 9 — help me think through it"
+
+* "I'm teaching prototyping tomorrow, not sure how to structure it"
+
+* "Design a lesson on parallel circuits using UbD"
+
+* "What's a good way to frame this watershed lesson?"
+
+* "Help me think backwards from what I want students to understand"
 
 ## When NOT to use
 
-- **Multi-class units / modules.** That's `plan-module` (when we build it).
-- **Assessments / quizzes / projects.** That's `plan-assessment`.
-- **Just editing existing content.** Use `edit_page_content` directly via the canvas-mcp tools.
+* **The teacher already knows what they're teaching and just wants it on Canvas.** That's `post-lesson-page`. Don't make them think backwards if they don't want to.
+
+* **Multi-class units or modules.** That's `plan-module` (which has its own UbD path scaled to multi-lesson arcs).
+
+* **Assessments / tests / projects.** That's `plan-assessment` for the page, `post-quiz` for the actual Canvas Quiz object.
+
+* **Whole-course scaffolding.** That's `plan-course`.
 
 ## Prerequisites
 
-- canvas-mcp v0.3.11+ installed and configured.
-- A school config with a `lesson` page template (Franklin: bundled by default; other schools: set `SCHOOL_CONFIG` to point at your own).
+* canvas-mcp installed and configured *only if* the teacher wants to pull module context (existing essential questions, enduring understandings) or compete with the school's competency framework. The skill works without canvas-mcp for pure ideation.
+
+* No Canvas writes happen in this skill. No `published: false` worry, no draft creation — this is a chat-only working document.
 
 ## Workflow
 
-### 1. Confirm the basics
+### 1. Establish context
 
-Before generating any content, confirm with the teacher:
+Confirm with the teacher (asking only for what's missing):
 
-- **Which Canvas course?** If they named a course by code or fragment (e.g., "DSGN 9"), call `list_courses` and confirm the match. If they passed a numeric `course_id`, you can skip the lookup but mention which course you're targeting so they can catch a typo.
-- **What's the lesson title?** If they gave a topic ("the water cycle"), propose a working title ("The Water Cycle") and let them adjust.
-- **Anything else they specifically want included?** A guest speaker, a particular reading, a discussion prompt — note these so they land in the right slot.
+* **Lesson topic / focus.** What's the lesson about, in one phrase. If they gave a working title, use it; otherwise propose one.
 
-Don't ask about things you can figure out yourself or that don't matter at planning time. Specifically: don't ask about module placement yet (we'll handle it after the draft is created), don't ask about publishing — the MCP creates the page as a draft and the teacher publishes manually — don't ask about HTML structure (the template handles it).
+* **Class duration.** 45 minutes? 75? 90? This shapes Stage 3 timing. If they don't say and you can't infer, ask.
 
-### 2. Discover the lesson template
+* **Where does this lesson sit?** Standalone, or part of an existing Canvas module / unit plan? If part of a module, optionally call `list_modules(course_identifier)` + `get_page_content` on the module's outcomes page to pull the module's enduring understandings and essential questions — the lesson should advance those, not invent new ones.
 
-Call `list_page_templates` and find the entry named `lesson`. Read its:
+* **Which Canvas course?** Only needed if you'll pull module context or call `list_competencies`. If the teacher is purely ideating without a course in mind, skip this — you don't need a course to think about a lesson.
 
-- **`slots`** — these are the named content holes you'll need to fill. Every slot has a `description` telling you what content goes there.
-- **`sections`** — optional sections with default-include/omit states. You can override via `include_sections` / `omit_sections` on the publish call.
+Don't over-confirm. If the teacher said "plan a 60-min lesson on prototyping for DSGN 9," you have topic, duration, and course — move on.
 
-If no `lesson` template exists in the school config, fall back: tell the teacher "no lesson template configured — I'll create a generic page instead" and use `template: "default"` or `template: "none"`. Continue the workflow as best you can.
+### 2. Stage 1 — Desired Results
 
-### 3. Consider competency + module alignment
+For a single lesson, scope is smaller than a module. Identify:
 
-Call `list_competencies`. If a framework is configured (e.g., Franklin's TD Competencies, or another school's framework), **always** spend a moment thinking about which 1–3 competencies this lesson naturally targets. Don't skip this just because the teacher didn't bring it up — most lessons have a clear competency frame, and surfacing it makes the page genuinely more useful.
+**Learning targets** (1–2 statements, SWBAT form — "Students will be able to…"). Specific, observable, achievable in one class. Distinguish for the teacher:
 
-This is a *thinking* step, not a content step (yet). You're using the competency frame to inform what goes into each slot — especially `to` (the skills slot) and `tasks` (the activity slot). A watershed lesson naturally targets **Knowledge-Based Reasoning** (applying geography concepts) and **Systems Thinking** (understanding the interconnected water cycle). Knowing this, you'd phrase the `to` slot's skills with that lens, and design `tasks` that actually exercise those competencies rather than something tangential.
+| Not this | But this |
+|---|---|
+| Topic: "watersheds" | Target: "SWBAT diagram the path of water through a local watershed" |
+| Fact: "watersheds drain to oceans" | Target: "SWBAT explain why endorheic basins don't drain to oceans" |
+| Activity: "build a watershed model" | Target: "SWBAT predict how land use changes affect downstream water quality" |
 
-Pick 1–3 competencies, not all 9. The alignment is meaningful only if the lesson genuinely targets them. Don't shoehorn.
+**Essential question** (1, sometimes 2). The open-ended question students wrestle with during this class. Often borrowed from the module's essential questions — pick the one most relevant to today's targets. If standalone (no module), draft one.
 
-**If the teacher is working from a module-level unit plan** (e.g., they ran `plan-module` with the backwards-design path, or shared a UbD-style unit plan), look for the lesson's connection to that bigger picture:
+**Enduring understanding(s)** (1, sometimes 2). The big idea this lesson builds toward. Almost always borrowed from a parent module if there is one; if standalone, draft one but don't overreach — a single lesson advances an EU, it doesn't deliver it.
 
-- **Which essential question does this lesson advance?** A lesson should help students wrestle with at least one of the module's open-ended inquiry questions.
-- **Which enduring understanding does it build toward?** Lessons accumulate toward the module's big-idea takeaways — name which one(s).
-- **Which content + skill objectives is it teaching toward?** Often 1–3 per lesson, not all of them.
+**Competency alignment.** Call `list_competencies` if a course is set and the school config has one. Pick **1–2 competencies** this lesson naturally exercises through the targets + planned activity. Don't shoehorn — a vocab-memorization lesson doesn't target Systems Thinking just because the topic is ecosystems.
 
-Ask the teacher: *"Is this lesson part of a module you've already designed? If so, which essential question / enduring understanding does it advance?"* If they have that context, fold it into the `to` slot framing (e.g., `<p>Through this lesson, students explore the question: "How do natural systems organize across landscapes?"</p>` followed by the can-do statements). If they don't have a unit plan, that's fine — skip this and use just the competency framing.
+**For conventional content** (Algebra topics, US History units, standard Biology, world languages): draft these for the teacher to react to. Claude has reasonable pattern-matching here.
 
-In step 6 (preview), surface the suggested competency alignment AND any unit-plan connections you noted. Ask whether to call them out explicitly in the lesson or keep them woven into the content.
+**For unconventional or teacher-designed content** (transdisciplinary projects, school-specific curriculum, novel framings): don't assume. Share initial ideas as conversation starters, let the teacher shape direction.
 
-If `list_competencies` returns `configured: false` (no framework set), still ask about unit-plan context — competencies and unit plans are separate concerns.
-
-### 4. Generate content for each slot
-
-For each slot in the template, generate appropriate HTML content. Match the slot's `description` from `list_page_templates`. Keep each slot focused — a slot is one section of the page, not a whole lesson.
-
-Quality bar:
-
-- **Concrete, classroom-ready.** "Students will diagram a local watershed" beats "Students will learn about watersheds."
-- **Use real student work patterns.** Reference accessible materials, give clear directions. If you don't know what tools/platforms the class uses, ask.
-- **HTML, not markdown.** The template body is HTML; produce `<p>`, `<ul>`, `<li>`, etc. directly.
-- **Don't pad.** Empty slots are fine if they'd genuinely be empty in a real lesson. Don't fill `discussion` with a generic prompt unless the teacher asked for a discussion.
-- **No fake links.** If you're referencing a resource, either use a real URL the teacher provided or leave it as plain text for them to fill in.
-
-### 5. Handle optional sections smartly
-
-Sections marked `default: "omit"` in the template (typically `discussion`) should stay omitted unless the teacher mentioned a discussion, debate, or forum prompt. When they did, pass `include_sections: ["discussion"]` and fill the corresponding slot.
-
-Sections marked `default: "include"` (typically `assessment`) stay on unless the teacher explicitly says "no assessment for this lesson." Then pass `omit_sections: ["assessment"]`.
-
-Don't ask the teacher about optional sections by name — let their words drive the choice. If they mentioned "tomorrow we'll debate the impact of dams" → discussion section on. If they said "this is purely an intro lesson, no graded work" → assessment section off.
-
-### 6. Preview before creating the draft
-
-Show the teacher a brief outline of what each slot will contain, plus the suggested competency alignment if you identified one in step 3:
+**Stage 1 checkpoint** — show the teacher:
 
 ```
-Lesson page draft — "The Water Cycle"
+## Stage 1: Desired Results
 
-• About: Watershed geography + evapotranspiration cycle
-• To: Diagram a local watershed, explain evapotranspiration
-• Concepts: Watershed, evapotranspiration, runoff, precipitation
-• Resources: USGS watershed tool, [reading TBD]
-• Tasks: Map your home watershed (worksheet), share with class
-• Discussion: (omitted — not requested)
-• Assessment: Friday quiz link (placeholder)
+**Learning targets** (SWBAT):
+1. [...]
+2. [...]
 
-Suggested competency focus: Knowledge-Based Reasoning + Systems Thinking.
-Want me to call these out explicitly in the lesson, or keep them woven into the content?
+**Essential question:** [...]
 
-Ready to create this as a draft in Canvas?
+**Enduring understanding:** [...]
+
+**Competency focus:** [Knowledge-Based Reasoning, Systems Thinking, ...]
 ```
 
-Wait for approval or revision requests. If the teacher asks for changes, iterate on the affected slots without regenerating everything.
+Wait for the teacher to confirm or revise before moving to Stage 2. This is the foundation — getting it right matters more than speed.
 
-If the teacher wants competencies called out explicitly, add a short paragraph at the end of the `to` slot referencing them by name (e.g., `<p>This lesson exercises <strong>Knowledge-Based Reasoning</strong> and <strong>Systems Thinking</strong> through the watershed mapping task.</p>`). If they want them kept implicit, the slot content stays as you generated it — the competency lens already shaped it.
+### 3. Stage 2 — Evidence of Understanding
 
-If no competency framework was configured (step 3 was skipped), omit the "Suggested competency focus" line from the preview.
+At the lesson scale, design **one** formative check that tells the teacher whether students hit the targets. The check should:
 
-### 7. Create the draft in Canvas
+* **Match the targets.** If the target is "explain why endorheic basins don't drain to oceans," the check needs students producing an explanation — not multiple choice.
 
-Call `create_page` with:
+* **Fit inside the class period.** 3–10 minutes typically. Exit tickets, mini-demos, quick-writes, peer explanations, artifact checks, observation rubrics.
 
-```
-create_page(
-  course_identifier: "<course code or id>",
-  title: "<lesson title>",
-  template: "lesson",
-  slots: { about: "...", to: "...", concepts: "...", ... },
-  include_sections: [...],  // only if the teacher wanted a default-omit section
-  omit_sections: [...]      // only if the teacher wanted to drop a default-include section
-)
-```
+* **Be specific.** "I'll see if they got it" is not a formative check. "I'll collect a 2-sentence written response to *'Why does the Great Salt Lake have no outflow?'* and look for mention of evaporation + closed-basin geography" is.
 
-The page is created as a draft (`published: false` — enforced by the MCP). Confirm to the teacher:
+Format the formative check:
 
-> Created draft lesson page **The Water Cycle** in DSGN 9. It's saved as a draft — open it in Canvas at <Canvas link>, review, and click **Publish** when you're ready.
+* **What it is** (exit ticket / quick-write / observed demo / mini-artifact / discussion prompt)
 
-If `create_page` returns `template_applied: null`, surface that — it means the school config didn't load and no template was applied.
+* **When in the lesson** (last 5 min? mid-class transition? continuous observation?)
 
-**Never tell the teacher you "published" the page.** It's a draft until they publish it manually in Canvas.
+* **Success signal** (what a student who hit the target produces vs. one who didn't)
 
-### 8. Module placement (only if asked)
+If the lesson feeds a graded summative arc (unit test next week, project due Friday), note the connection but don't design the summative here — that's `plan-assessment`'s job.
 
-If the teacher asked to put this lesson in a specific module ("add it to Week 3" or "right after the prototyping lesson"), call `list_modules(course_identifier, include_items: true)` to find the right module + position, then `add_module_item` with `type: "Page"` and the new page's URL slug in `content_id`.
-
-If they didn't mention module placement, don't add it — they'll drag it where they want in the Canvas UI.
-
-## Updating an existing lesson
-
-If the teacher says "add a discussion to that lesson page" or "rewrite the tasks section" — use `edit_page_content` with the template machinery, NOT `create_page`:
+**Stage 2 checkpoint** — show the teacher:
 
 ```
-edit_page_content(
-  course_identifier: ...,
-  page_url: "<existing-slug>",
-  template: "lesson",
-  slots: { ...all slots, with the changes... },
-  include_sections: ["discussion"],   // if adding the discussion accordion
-)
+## Stage 2: Evidence of Understanding
+
+**Formative check:**
+- Type: [exit ticket / quick-write / ...]
+- When: [end of class / mid-class / ...]
+- Prompt or task: [...]
+- Success signal: [what a student who hit the target produces]
+- Miss signal: [what a struggling student produces]
+
+**Connection to summative** (if any): [...]
 ```
 
-You must provide **all slots** in the rebuild, not just the changed ones — the MCP doesn't preserve previous slot content from the on-Canvas HTML. If you generated the lesson earlier in this conversation, you already have all the slot content. If you didn't, call `get_page_content` first and reconstruct the slot values from what's visible, OR ask the teacher what content should stay vs. change.
+Wait for confirmation before Stage 3. If the formative check feels mismatched to the targets, push back — that's the most common UbD failure mode at the lesson scale.
+
+### 4. Stage 3 — Learning Plan
+
+Plan the arc of the class session — phase-by-phase activities that get students from where they walked in to where the targets land. Match the rough total to the duration confirmed in step 1.
+
+Format as a timed sequence:
+
+```
+0:00–0:05  Hook: [what gets students into the question]
+0:05–0:15  Activator: [activate prior knowledge / surface misconceptions]
+0:15–0:35  Main investigation: [the heart of the lesson]
+0:35–0:50  Consolidation: [synthesis, discussion, structured talk]
+0:50–0:55  Formative check (from Stage 2)
+0:55–1:00  Closing / preview next class
+```
+
+Per phase, capture:
+
+* **Name + minutes** (so total adds up to the class length)
+
+* **What students are doing** (active verbs — investigating, comparing, defending, building, sketching, arguing)
+
+* **What the teacher is doing** (modeling, observing, questioning, scaffolding — not always lecturing)
+
+* **Materials / prompts / links** (only if known — leave TBD otherwise)
+
+**Sequencing principles:**
+
+* Hook → exploration → consolidation → check → close. UbD prefers students encountering the question *before* receiving the answer.
+
+* Active beats passive. If a phase has students "listening to the teacher explain X," ask whether they could discover X instead.
+
+* Less direct instruction than feels natural. 10–15 min of teacher talk per 60 min is plenty for most secondary classes.
+
+* Make space for student talk + iteration — turn-and-talks, peer feedback, draft-revise cycles.
+
+* Don't pack the schedule. Buffer time matters; ambitious pacing that requires perfection will fail.
+
+* The formative check from Stage 2 has a slot in the timeline — show it explicitly.
+
+**Stage 3 checkpoint** — show the teacher the timed sequence. Wait for confirmation.
+
+### 5. Compose the full UbD brief
+
+Once Stages 1–3 are locked, present a single composed brief:
+
+```
+# Lesson Plan — [Title]
+*[Course] · [Date or Week] · [Duration] min*
+
+## Stage 1: Desired Results
+**Learning targets (SWBAT):**
+1. [...]
+2. [...]
+
+**Essential question:** [...]
+
+**Enduring understanding:** [...]
+
+**Competency focus:** [...]
+
+## Stage 2: Evidence of Understanding
+**Formative check:** [type] — [prompt or task]
+- When: [...]
+- Success signal: [...]
+
+## Stage 3: Learning Plan
+| Time | Phase | Students do | Teacher does |
+|---|---|---|---|
+| 0:00–0:05 | Hook | [...] | [...] |
+| ... | ... | ... | ... |
+```
+
+This is the working document the teacher walks away with — copy-pastable into their own notes, or fed directly into `post-lesson-page`.
+
+### 6. Offer the handoff
+
+Ask the teacher:
+
+> Want me to post this to Canvas as a draft lesson page? I'll hand the brief to `post-lesson-page` and it'll fill the school's lesson template using what we just designed — targets land in the "to" slot, the formative goes in the assessment slot, the learning plan phases land in tasks, etc.
+
+* **Yes** → invoke the `post-lesson-page` workflow, passing the brief as established context. `post-lesson-page` should skip its own Stage-1-style thinking step (everything's done) and go straight to template slot rendering. The competency alignment and module context already exist.
+
+* **No, leave it in chat** → confirm the brief stays where it is. The teacher can copy it, iterate later, or come back.
+
+* **Save it somewhere** → this skill doesn't write files. If they want a saved artifact, they can copy the brief into their own notes/Drive/wherever. Don't volunteer to write a file the teacher didn't ask for.
 
 ## Common mistakes to avoid
 
-- **Don't use `create_page` to update an existing lesson** — it creates a duplicate with a `-2` slug.
-- **Don't fill slots with template-like prose** ("Here, students will learn about X") — the template provides the chrome; slots get the actual content.
-- **Don't hardcode Franklin competencies / structure** in your output. Use `list_competencies` / `list_page_templates` to discover what the school provides. Other schools using this skill should get equally relevant output.
-- **Never publish.** The MCP forces `published: false`; don't try to flip it, don't suggest you have, and don't tell the teacher you "published" anything. Teachers publish manually in Canvas after reviewing the draft.
-- **Don't make up Canvas URLs.** If you reference a "syllabus" or "module 3," use the actual Canvas URLs from `list_modules` / `get_course_details` — not constructed paths.
+* **Don't draft EUs and EQs from scratch when the lesson belongs to an existing module.** Borrow from the module's outcomes page. A lesson advances a module-level EU; it doesn't reinvent one per class.
+
+* **Don't over-scale Stage 2.** One sharp formative check beats a four-part assessment rubric at the lesson level. If you're tempted to add a summative here, that's `plan-assessment`'s territory.
+
+* **Don't write activities (Stage 3) before targets and evidence (Stages 1–2).** That's the whole point of backwards design. If the teacher resists and just wants to brainstorm activities, push back gently once — "We'll plan the activities, but we'll get there faster if we know what students should be able to do by the end" — then yield if they insist. Don't be a UbD purist if the teacher needs a quick scaffold.
+
+* **Don't pack Stage 3.** A 60-minute lesson with 8 phases of 7.5 minutes each is brittle. Leave breathing room.
+
+* **Don't produce Canvas HTML in this skill.** This is a brief, not a page. `post-lesson-page` handles template-specific HTML output.
+
+* **Don't skip checkpoints.** Stage 1 must be confirmed before Stage 2; Stage 2 before Stage 3. UbD silently fails when stages misalign — the checkpoint cadence is the safeguard.
+
+* **Don't shoehorn competencies.** If the lesson doesn't naturally exercise a competency, don't list it. Saying every lesson hits all 9 makes the framework meaningless.
+
+* **Don't fabricate module / course context.** If the teacher didn't tell you what module this belongs to, ask — don't infer one and produce a brief that misaligns with a real Canvas unit plan.

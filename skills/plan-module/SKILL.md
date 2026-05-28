@@ -20,9 +20,9 @@ A teacher describes a multi-lesson stretch of curriculum they want to scaffold i
 
 ## When NOT to use
 
-- **Single lesson** — that's `plan-lesson`.
+- **Single lesson** — that's `plan-lesson` (UbD planning) or `post-lesson-page` (just posting an already-planned lesson).
 - **Single assessment** — that's `plan-assessment`.
-- **Adding to an existing module** — call `list_modules`, then `add_module_item` directly (or use `plan-lesson` / `plan-assessment` and then add the resulting page).
+- **Adding to an existing module** — call `list_modules`, then `add_module_item` directly (or use `plan-lesson` → `post-lesson-page` / `plan-assessment` and then add the resulting page).
 
 ## Prerequisites
 
@@ -404,11 +404,11 @@ about: "<p><em>This lesson introduces AI coding assistants...</em></p>
 <p><strong>Formative check:</strong> Exit ticket — \"What can AI coding tools do well and badly?\"</p>"
 ```
 
-This gives the teacher the UbD scaffolding inside each page so when they later run `plan-lesson` per lesson, the objective context is right there in the draft.
+This gives the teacher the UbD scaffolding inside each page so when they later run `plan-lesson` + `post-lesson-page` per lesson, the objective context is right there in the draft.
 
-In **Stub mode**, leave all slots empty (the page will be created with empty accordions; the teacher fills them later via `plan-lesson` or directly in Canvas).
+In **Stub mode**, leave all slots empty (the page will be created with empty accordions; the teacher fills them later via `plan-lesson` → `post-lesson-page`, just `post-lesson-page`, or directly in Canvas).
 
-In **Full mode**, walk the `plan-lesson` workflow for each lesson — generate per-slot content, optional sections, competency alignment, the works. This is slow for 13 lessons but produces complete drafts. If the teacher took the UbD path, pass the relevant Stage 1 objectives + Stage 3 formative assessment to each `plan-lesson` invocation as context.
+In **Full mode**, walk the `post-lesson-page` workflow for each lesson — generate per-slot content, optional sections, competency alignment, the works. This is slow for 13 lessons but produces complete drafts. If the teacher took the UbD path, pass the relevant Stage 1 objectives + Stage 3 formative assessment to each `post-lesson-page` invocation as context (the UbD work is already done at the module level — no need to re-plan per lesson).
 
 Capture each returned `url`. Don't ask the teacher to confirm each lesson individually in Outline/Stub mode — just power through and produce a summary at the end.
 
@@ -441,7 +441,7 @@ Surface the result:
 > Drafted **Module 4: Vibe Coding: Transforming Text into Functional Software with AI (Weeks 24-36)** in DSGN 9 — 1 Module Outcomes page, 13 lesson pages, 1 final project page, all added to the new module in order. Everything is saved as drafts (module + items both unpublished). Open the module in Canvas at <module URL> to review and publish.
 >
 > Next steps:
-> - Develop each lesson page (use `/plan-lesson` per lesson, or edit directly in Canvas)
+> - Develop each lesson page (use `/plan-lesson` then `/post-lesson-page` per lesson, or just `/post-lesson-page` if the lesson is already planned, or edit directly in Canvas)
 > - Develop the final project page (use `/plan-assessment`, or edit directly in Canvas)
 > - When the whole module is ready, publish the module + each item from the Canvas UI
 
