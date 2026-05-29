@@ -13,21 +13,27 @@ Plan a complete Canvas module: the Module Outcomes page, the lessons inside it, 
 
 A teacher describes a multi-lesson stretch of curriculum they want to scaffold in Canvas. Common phrasings:
 
-- "Plan a module on vibe coding — Weeks 24–36, course DSGN 9"
-- "Design Module 4 for FSV 117 — pitch development, 4 weeks"
-- "Draft a watershed unit, 6 lessons + a test"
-- "I need to set up the next module — AI tools for designers, 8 weeks"
+* "Plan a module on vibe coding — Weeks 24–36, course DSGN 9"
+
+* "Design Module 4 for FSV 117 — pitch development, 4 weeks"
+
+* "Draft a watershed unit, 6 lessons + a test"
+
+* "I need to set up the next module — AI tools for designers, 8 weeks"
 
 ## When NOT to use
 
-- **Single lesson** — that's `plan-lesson` (UbD planning) or `post-lesson-page` (just posting an already-planned lesson).
-- **Single assessment** — that's `plan-assessment`.
-- **Adding to an existing module** — call `list_modules`, then `add_module_item` directly (or use `plan-lesson` → `post-lesson-page` / `plan-assessment` and then add the resulting page).
+* **Single lesson** — that's `plan-lesson` (UbD planning) or `post-lesson-page` (just posting an already-planned lesson).
+
+* **Single assessment** — that's `plan-assessment`.
+
+* **Adding to an existing module** — call `list_modules`, then `add_module_item` directly (or use `plan-lesson` → `post-lesson-page` / `plan-assessment` and then add the resulting page).
 
 ## Prerequisites
 
-- canvas-mcp **v0.3.12 or later** (older versions don't have `create_module`).
-- A school config with `lesson`, `assessment`, and `module_outcomes` page templates (Franklin: bundled by default).
+* canvas-mcp **v0.3.12 or later** (older versions don't have `create_module`).
+
+* A school config with `lesson`, `assessment`, and `module_outcomes` page templates (Franklin: bundled by default).
 
 ## Workflow
 
@@ -35,13 +41,19 @@ A teacher describes a multi-lesson stretch of curriculum they want to scaffold i
 
 These pieces are required to build the module. Get them from the teacher's initial request; ask only for what's missing:
 
-- **Canvas course** (code or numeric id — confirm via `list_courses` if there's any ambiguity)
-- **Module number** (integer; e.g., 4)
-- **Module short title** (the marketing name; e.g., "Vibe Coding")
-- **Module subtitle** (the elaboration; e.g., "Transforming Text into Functional Software with AI")
-- **Week range** (start–end integers, e.g., 24–36)
-- **Topic / scope** (what the module is actually about — free-form from the teacher)
-- **Approximate number of lessons** (the teacher tells you, or you propose based on week count; see "Default lesson count" below)
+* **Canvas course** (code or numeric id — confirm via `list_courses` if there's any ambiguity)
+
+* **Module number** (integer; e.g., 4)
+
+* **Module short title** (the marketing name; e.g., "Vibe Coding")
+
+* **Module subtitle** (the elaboration; e.g., "Transforming Text into Functional Software with AI")
+
+* **Week range** (start–end integers, e.g., 24–36)
+
+* **Topic / scope** (what the module is actually about — free-form from the teacher)
+
+* **Approximate number of lessons** (the teacher tells you, or you propose based on week count; see "Default lesson count" below)
 
 Build the **module name** to the exact Franklin convention:
 
@@ -65,10 +77,13 @@ Do NOT improvise these names — the formatting is part of how the school's Canv
 
 If the teacher didn't specify the number of lessons, propose based on the week range:
 
-- 1–2 weeks: 2–3 lessons
-- 3–4 weeks: 4–6 lessons
-- 5–8 weeks: 6–10 lessons
-- 9+ weeks: ~1 lesson per week, but ask the teacher
+* 1–2 weeks: 2–3 lessons
+
+* 3–4 weeks: 4–6 lessons
+
+* 5–8 weeks: 6–10 lessons
+
+* 9+ weeks: \~1 lesson per week, but ask the teacher
 
 Always confirm with the teacher before committing — different teachers run modules at different cadences.
 
@@ -76,7 +91,7 @@ Always confirm with the teacher before committing — different teachers run mod
 
 Ask the teacher:
 
-> *Want to use **backwards design (UbD)** to think through the module's goals first, or **jump straight to lesson sequencing**?*
+> *Want to use* ***backwards design (UbD)*** *to think through the module's goals first, or* ***jump straight to lesson sequencing**?*
 >
 > *Backwards design takes 5–15 extra minutes but produces a stronger module — we start with what students should understand by the end, then design how we'll know they got there, then plan the lessons. Either way the Canvas artifacts end up the same.*
 
@@ -137,16 +152,22 @@ Wait for the teacher to confirm or revise before moving to Stage 2. This is the 
 For each Stage 1 objective, design how you'll know students achieved it. Two kinds:
 
 **Summative Assessment(s).** Evaluate learning at the end of the module. For each, specify:
-- What it is (project / essay / presentation / portfolio / performance / test)
-- Which objectives it measures (call back to Stage 1)
-- Brief criteria — what distinguishes strong from weak performance
+
+* What it is (project / essay / presentation / portfolio / performance / test)
+
+* Which objectives it measures (call back to Stage 1)
+
+* Brief criteria — what distinguishes strong from weak performance
 
 Default to one summative for a multi-week module; some modules have two (midpoint + final).
 
 **Formative Assessment(s).** Ongoing checks for understanding during the module. For each:
-- What it is (exit ticket / reflection / discussion / draft / peer feedback / observation)
-- When it happens (which lesson or phase)
-- What it tells the teacher
+
+* What it is (exit ticket / reflection / discussion / draft / peer feedback / observation)
+
+* When it happens (which lesson or phase)
+
+* What it tells the teacher
 
 Formative assessments are usually lightweight and woven into individual lessons — they become part of the lesson's `tasks` slot in Canvas, not separate pages.
 
@@ -203,19 +224,25 @@ Proposed lesson sequence — Module 4: Vibe Coding (Weeks 24-36)
 ```
 
 Sequencing principles:
-- Build from concrete to abstract, simple to complex
-- Front-load concepts later lessons depend on
-- Place formative checkpoints at natural transition points
-- Give students time to iterate — not just consume
-- Include buffer time; ambitious pacing that requires perfection will fail
-- End with synthesis, not just assessment — students should make meaning
+
+* Build from concrete to abstract, simple to complex
+
+* Front-load concepts later lessons depend on
+
+* Place formative checkpoints at natural transition points
+
+* Give students time to iterate — not just consume
+
+* Include buffer time; ambitious pacing that requires perfection will fail
+
+* End with synthesis, not just assessment — students should make meaning
 
 Iterate with the teacher until the sequence is locked. Then jump to **Step 8 (preview)**.
 
 The Stage 2 summative becomes the module's assessment page (see step 7d).
 The Stage 1 enduring understandings + essential questions become the Module Outcomes page content (see step 7b — UbD path generates richer outcomes that reference the EUs and EQs).
 
----
+***
 
 ### 4. Identify module-level competencies *(topic-first path only)*
 
@@ -250,10 +277,13 @@ Iterate with the teacher until they're happy. Don't move on until the sequence i
 
 Ask the teacher about the culminating assessment for the module:
 
-- **Type** — project / test / presentation / portfolio / essay / etc.
-- **Total points** — for the grade boundaries table
-- **Weighting** — % of trimester/term
-- **Time/duration** — for tests this is minutes; for projects this is the timeline
+* **Type** — project / test / presentation / portfolio / essay / etc.
+
+* **Total points** — for the grade boundaries table
+
+* **Weighting** — % of trimester/term
+
+* **Time/duration** — for tests this is minutes; for projects this is the timeline
 
 Propose if the teacher doesn't have specifics yet. The default for a multi-week module is usually a project or portfolio (rarely a sit-down test).
 
@@ -289,10 +319,13 @@ Propose if the teacher doesn't have specifics yet. The default for a multi-week 
 
 **If you took the topic-first path (Step 4–5):** generate 4–8 outcome statements. Each should:
 
-- Start with an action verb (Design, Build, Evaluate, Analyze, Apply, etc.)
-- Be observable / measurable (not "students will understand X" — say what they'll DO)
-- Map to one of the identified competencies where applicable
-- Reflect the scope of the WHOLE module, not just one lesson
+* Start with an action verb (Design, Build, Evaluate, Analyze, Apply, etc.)
+
+* Be observable / measurable (not "students will understand X" — say what they'll DO)
+
+* Map to one of the identified competencies where applicable
+
+* Reflect the scope of the WHOLE module, not just one lesson
 
 ```html
 <li>Design and prompt-engineer AI assistants to generate working code</li>
@@ -441,22 +474,37 @@ Surface the result:
 > Drafted **Module 4: Vibe Coding: Transforming Text into Functional Software with AI (Weeks 24-36)** in DSGN 9 — 1 Module Outcomes page, 13 lesson pages, 1 final project page, all added to the new module in order. Everything is saved as drafts (module + items both unpublished). Open the module in Canvas at <module URL> to review and publish.
 >
 > Next steps:
-> - Develop each lesson page (use `/plan-lesson` then `/post-lesson-page` per lesson, or just `/post-lesson-page` if the lesson is already planned, or edit directly in Canvas)
-> - Develop the final project page (use `/plan-assessment`, or edit directly in Canvas)
-> - When the whole module is ready, publish the module + each item from the Canvas UI
+>
+> * Develop each lesson page (use `/plan-lesson` then `/post-lesson-page` per lesson, or just `/post-lesson-page` if the lesson is already planned, or edit directly in Canvas)
+>
+> * Develop the final project page (use `/plan-assessment`, or edit directly in Canvas)
+>
+> * When the whole module is ready, publish the module + each item from the Canvas UI
 
 ## Common mistakes to avoid
 
-- **Don't skip the design-approach choice in step 2.** Ask. Some teachers will pick UbD; some will pick quick scaffolding. Both are valid. Don't default silently.
-- **Don't blend the two paths.** Pick one, walk it cleanly, then preview. Half-UbD with a topic-first preview is confusing for the teacher.
-- **Don't shoehorn UbD if the teacher said quick scaffold.** They asked for fast; respect that. Save the UbD walk for next time.
-- **Don't write enduring understandings as topics or facts.** "Photosynthesis" is a topic, not an understanding. "Plants convert sunlight to energy" is a fact. An enduring understanding is a transferable principle, written as a full sentence, worth uncovering.
-- **Don't write essential questions with definite answers.** Essential questions are arguable. "What is photosynthesis?" is not essential. "How do we know what's worth understanding?" is.
-- **Don't generate Stage 1/2/3 outputs without showing the teacher the checkpoints.** Each stage has a confirmation step. Use it.
-- **Never tell the teacher anything is "published."** Module + every page are drafts. Use the word "drafted" or "created as drafts."
-- **Don't improvise the module name format.** The convention is exact: `Module N: Short: Subtitle (Weeks X-Y)`. Same for the Module Outcomes page title: `Module N: Short - Outcomes`.
-- **Don't draft lessons in Outline mode and silently flip to Full mode** (or vice versa) — confirm the mode in the preview and stick to it.
-- **Don't ask the teacher to confirm each lesson individually** during the bulk-creation step. They confirmed the sequence; just execute and summarize at the end.
-- **Don't add an extra `<ol>` wrapper in the `outcomes` slot.** The template provides the `<ol id="kl_objective_list">`; the slot is just the `<li>` items.
-- **Don't make up Canvas URLs.** Use the `url` / `html_url` fields returned by `create_page` / `create_module`, not constructed paths.
-- **Don't run `plan-module` on a module that already exists.** It will create a duplicate. Check via `list_modules` first if there's any chance the module already exists.
+* **Don't skip the design-approach choice in step 2.** Ask. Some teachers will pick UbD; some will pick quick scaffolding. Both are valid. Don't default silently.
+
+* **Don't blend the two paths.** Pick one, walk it cleanly, then preview. Half-UbD with a topic-first preview is confusing for the teacher.
+
+* **Don't shoehorn UbD if the teacher said quick scaffold.** They asked for fast; respect that. Save the UbD walk for next time.
+
+* **Don't write enduring understandings as topics or facts.** "Photosynthesis" is a topic, not an understanding. "Plants convert sunlight to energy" is a fact. An enduring understanding is a transferable principle, written as a full sentence, worth uncovering.
+
+* **Don't write essential questions with definite answers.** Essential questions are arguable. "What is photosynthesis?" is not essential. "How do we know what's worth understanding?" is.
+
+* **Don't generate Stage 1/2/3 outputs without showing the teacher the checkpoints.** Each stage has a confirmation step. Use it.
+
+* **Never tell the teacher anything is "published."** Module + every page are drafts. Use the word "drafted" or "created as drafts."
+
+* **Don't improvise the module name format.** The convention is exact: `Module N: Short: Subtitle (Weeks X-Y)`. Same for the Module Outcomes page title: `Module N: Short - Outcomes`.
+
+* **Don't draft lessons in Outline mode and silently flip to Full mode** (or vice versa) — confirm the mode in the preview and stick to it.
+
+* **Don't ask the teacher to confirm each lesson individually** during the bulk-creation step. They confirmed the sequence; just execute and summarize at the end.
+
+* **Don't add an extra** **`<ol>`** **wrapper in the** **`outcomes`** **slot.** The template provides the `<ol id="kl_objective_list">`; the slot is just the `<li>` items.
+
+* **Don't make up Canvas URLs.** Use the `url` / `html_url` fields returned by `create_page` / `create_module`, not constructed paths.
+
+* **Don't run** **`plan-module`** **on a module that already exists.** It will create a duplicate. Check via `list_modules` first if there's any chance the module already exists.
