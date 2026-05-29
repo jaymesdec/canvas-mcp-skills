@@ -1,6 +1,6 @@
 ---
 name: plan-lesson
-description: Plan a single class lesson using Understanding by Design (UbD) — backwards design from learning targets → evidence of understanding → learning activities. Use when the teacher says "plan a lesson", "design a lesson", "help me think through tomorrow's class", "what should I teach for X", or wants pedagogical scaffolding before deciding what students will do. Produces a conversational UbD brief (Stages 1–3 scaled for one class session) and offers handoff to `post-lesson-page` when ready to materialize on Canvas. Does NOT create any Canvas artifacts itself.
+description: Plan a single class lesson using Understanding by Design (UbD) — backwards design from learning targets → evidence of understanding → learning activities. Use when the teacher says "plan a lesson", "design a lesson", "help me think through a class", "what should I teach for X", or wants pedagogical scaffolding before deciding what students will do. Produces a conversational UbD brief (Stages 1–3 scaled for one class session) and offers handoff to `post-lesson-page` when ready to materialize on Canvas. Does NOT create any Canvas artifacts itself.
 ---
 
 # Plan Lesson
@@ -61,10 +61,10 @@ For a single lesson, scope is smaller than a module. Identify:
 
 **Learning targets** (1–2 statements, SWBAT form — "Students will be able to…"). Specific, observable, achievable in one class. Distinguish for the teacher:
 
-| Not this | But this |
-|---|---|
-| Topic: "watersheds" | Target: "SWBAT diagram the path of water through a local watershed" |
-| Fact: "watersheds drain to oceans" | Target: "SWBAT explain why endorheic basins don't drain to oceans" |
+| Not this                            | But this                                                                     |
+| ----------------------------------- | ---------------------------------------------------------------------------- |
+| Topic: "watersheds"                 | Target: "SWBAT diagram the path of water through a local watershed"          |
+| Fact: "watersheds drain to oceans"  | Target: "SWBAT explain why endorheic basins don't drain to oceans"           |
 | Activity: "build a watershed model" | Target: "SWBAT predict how land use changes affect downstream water quality" |
 
 **Essential question** (1, sometimes 2). The open-ended question students wrestle with during this class. Often borrowed from the module's essential questions — pick the one most relevant to today's targets. If standalone (no module), draft one.
